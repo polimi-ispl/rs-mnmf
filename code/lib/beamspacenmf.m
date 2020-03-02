@@ -1,4 +1,30 @@
 function [estimateImage, Q, basisF, activationF, xTilde, invWbB] = beamspacenmf(micSTFT, I, fAx, d, nMic, c, sourceN, nBasisSource, nIter, init)
+% beamspacenmf
+% This function performs the source separation using the Beam-Space-Based
+% Multichannel Nonnegative  Matrix factorization.
+% The beam space representation of the array signal is computed and the
+% source images in the Beam Space are computed by the MCNMF. 
+% Params:
+%   - micSTFT: The multichannel STFTs of size freqN x timeN x micN.
+%   - I: The number of Beam Space bin (plane wave directions).
+%   - fAx: Frequency axis.
+%   - d: Distance between two consecutive microphones.
+%   - nMic: Number of microphones.                   
+%   - c: Sound speed. 
+%   - sourceN: Number of sources.
+%   - nBasisSource: Number of basis function used  in the NMF for each 
+%   source.
+%   - nIter: Number of MCNMF iterations.
+%   - init: Struct that contains the initialization of the algorithm if
+%   empty the initialization is computed.
+% Returns:
+%   - estimateImage: The estimated source images in the Beam Space.
+%   - Q: The Beam Space mixing coefficients.
+%   - basisF: The basis functions of the sources.
+%   - activationF: The activation functions of the sources.
+%   - xTilde: The Beam Space data.
+%   - invWbB: The inverse Beam Space transform matrix.
+%
 % Copyright 2020 Mirco Pezzoli
 % (mirco.pezzoli -at- polimi.it)
 %

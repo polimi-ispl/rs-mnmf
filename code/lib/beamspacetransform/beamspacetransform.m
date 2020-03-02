@@ -17,8 +17,6 @@ function h = beamspacetransform(fAx,thetaAx,d,nMic,c)
 % This software is distributed under the terms of the GNU Public License
 % version 3 (http://www.gnu.org/licenses/gpl.txt)
 %
-% If you use this code please cite this paper
-%
 
 fLen = length(fAx);                 % Number of frequency bins
 nDoa = length(thetaAx);             % Number of directions

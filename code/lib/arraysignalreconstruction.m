@@ -28,7 +28,7 @@ function [estimatedSignal, nmse] = arraysignalreconstruction(estimateImage, refe
 % If you use this code please cite this paper
 %
 
-fprintf('Signal estimation...\n');
+fprintf('Estimation of  the source images...\n');
 sTilde = cell(sourceN,1);
 nmse = sTilde;
 
