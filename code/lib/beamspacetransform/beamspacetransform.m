@@ -1,7 +1,7 @@
 function h = beamspacetransform(fAx,thetaAx,d,nMic,c)
-%% dasfilter 
+%% beamspacetransform 
 % This function computes the DAS stering vectors used for the Beam Space
-% transform
+% transform and the Beam Space transform matrix
 % Params: 
 %   - fAx: The temporal frequency axis
 %   - thetaAx: The direction axis (DOA) 
@@ -10,6 +10,7 @@ function h = beamspacetransform(fAx,thetaAx,d,nMic,c)
 %   - c: sound speed in air
 % Returns:
 %   - h: the beamspace transform matrix
+%
 % Copyright 2020 Mirco Pezzoli
 % (mirco.pezzoli -at- polimi.it)
 %
@@ -19,9 +20,9 @@ function h = beamspacetransform(fAx,thetaAx,d,nMic,c)
 % If you use this code please cite this paper
 %
 
-fLen = length(fAx);
-nDoa = length(thetaAx);
-h = zeros(nMic, nDoa, fLen);     % Steering Vector
+fLen = length(fAx);                 % Number of frequency bins
+nDoa = length(thetaAx);             % Number of directions
+h = zeros(nMic, nDoa, fLen);        % Beam Space transform matrix
 
 for mm = 1:nMic
     for aa = 1:nDoa
@@ -30,8 +31,8 @@ for mm = 1:nMic
 end
 h = h ./ nMic;
 for ff = 1:fLen
-    sqrH = sqrtm(h(:,:,ff)'*h(:,:,ff));
-    h(:,:,ff) = h(:,:,ff) *pinv(sqrH);
+    sqrH = sqrtm(h(:,:,ff)' * h(:,:,ff));
+    h(:,:,ff) = h(:,:,ff) * pinv(sqrH);
 end
 
 end
