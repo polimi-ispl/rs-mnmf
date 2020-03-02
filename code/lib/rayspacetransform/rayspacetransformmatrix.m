@@ -2,7 +2,7 @@ function [PSI] = rayspacetransformmatrix(f,c,d,L,mbar,W,qbar,sigma)
 %rayspacetransformmatrix
 %   This fucntion computes the ray space transform matrix for multiple
 %   frequencies in f.
-%   Args:
+%   Params:
 %       - f:	frequency axis in Hz
 %       - c:	speed of sound
 %       - d:	distance between adjacent microphones
@@ -15,7 +15,20 @@ function [PSI] = rayspacetransformmatrix(f,c,d,L,mbar,W,qbar,sigma)
 %   Returns:
 %       - PSI: the ray space transform tensor for multiple frequencies
 %
-% Mirco Pezzoli 2019
+% Copyright 2020 Mirco Pezzoli
+% (mirco.pezzoli -at- polimi.it)
+%
+% This software is distributed under the terms of the GNU Public License
+% version 3 (http://www.gnu.org/licenses/gpl.txt)
+%
+% If you use this code please cite this paper
+% L. Bianchi, F. Antonacci, A. Sarti and S. Tubaro, 
+% "The Ray Space Transform: A New Framework for Wave Field Processing," 
+% in IEEE Transactions on Signal Processing, vol. 64, no. 21, 
+% pp. 5696-5706, 1 Nov.1, 2016.
+% doi: 10.1109/TSP.2016.2591500
+% URL: http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=7513427&isnumber=7562579
+%
 
 z = (0:d:d*(L-1))';                         % [L,1] microphone positions
 m = ((0:mbar:(W-1)*mbar)-((W-1)/2*mbar))';  % [W,1] m axis

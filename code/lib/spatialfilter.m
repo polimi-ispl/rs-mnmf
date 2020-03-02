@@ -2,6 +2,15 @@ function y = spatialfilter(S, h, inverse)
 %SPATIALFILTER This function efficiently filter the multichannel STFT S
 % using the filter vector h
 %
+% Copyright 2020 Mirco Pezzoli
+% (mirco.pezzoli -at- polimi.it)
+%
+% This software is distributed under the terms of the GNU Public License
+% version 3 (http://www.gnu.org/licenses/gpl.txt)
+%
+% If you use this code please cite this paper
+%
+
     nDir = size(h,2);           % Number of looking directions
     fLen = size(S,1);           % Number of frequencies
     tLen = size(S,2);           % Number of time instants

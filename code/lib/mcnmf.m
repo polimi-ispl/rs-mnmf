@@ -1,4 +1,12 @@
 function [estimateImage, Q, basisF, activationF] = mcnmf(micSTFT, fAx, nMic, sourceN, nBasisSource, nIter, conv, init)
+% Copyright 2020 Mirco Pezzoli
+% (mirco.pezzoli -at- polimi.it)
+%
+% This software is distributed under the terms of the GNU Public License
+% version 3 (http://www.gnu.org/licenses/gpl.txt)
+%
+% If you use this code please cite this paper
+%
 
 fLen = length(fAx);
 tLen = size(micSTFT, 2);

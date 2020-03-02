@@ -1,4 +1,12 @@
 function [estimateImage, Q, basisF, activationF, xTilde, invWbB] = beamspacenmf(micSTFT, I, fAx, d, nMic, c, sourceN, nBasisSource, nIter, init)
+% Copyright 2020 Mirco Pezzoli
+% (mirco.pezzoli -at- polimi.it)
+%
+% This software is distributed under the terms of the GNU Public License
+% version 3 (http://www.gnu.org/licenses/gpl.txt)
+%
+% If you use this code please cite this paper
+%
 
 fLen = length(fAx);
 tLen = size(micSTFT, 2);
@@ -13,7 +21,7 @@ end
 fprintf('Beamspace transform...\n');
 thetaAx = linspace(-pi/2, pi/2, I);
 % Beamspace transformation matrix
-Wb = dasfilter(fAx, thetaAx, d, nMic, c);
+Wb = beamspacetransform(fAx, thetaAx, d, nMic, c);
 invWbB = permute(Wb, [2,1,3]);
 
 % Beamspace signals

@@ -1,4 +1,12 @@
 function [G_INV, outParam] = svd_inverse_matrix(G,regParams)
+% Copyright 2020 Mirco Pezzoli
+% (mirco.pezzoli -at- polimi.it)
+%
+% This software is distributed under the terms of the GNU Public License
+% version 3 (http://www.gnu.org/licenses/gpl.txt)
+%
+% If you use this code please cite this paper
+%
 
 method = regParams.method;
 q      = regParams.nCond;
