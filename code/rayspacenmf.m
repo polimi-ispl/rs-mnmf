@@ -1,4 +1,4 @@
-function [estimateImage, Q, basisF, activationF, xRaySpace, Wb, invWb, initQ] = rayspacenmf(micSTFT, mbar, Ws, qbar, sigma, fAx, d, nMic, c, sourceN, nBasisSource,...
+function [estimateImage, Q, basisF, activationF, xRaySpace, psi, invPsi, initQ] = rayspacenmf(micSTFT, mbar, Ws, qbar, sigma, fAx, d, nMic, c, sourceN, nBasisSource,...
     nIter, tik, init)
 % rayspacenmf
 % This function performs the source separation using the Ray-Space-Based
@@ -30,7 +30,8 @@ function [estimateImage, Q, basisF, activationF, xRaySpace, Wb, invWb, initQ] = 
 %   - basisF: The basis functions of the sources.
 %   - activationF: The activation functions of the sources.
 %   - xRaySpace: The Ray-Space-transformed data.
-%   - invWb: The inverse Ray Space transform matrix.
+%   - psi: The Ray Space tranform matrix
+%   - invPsi: The inverse Ray Space transform matrix.
 %   - initQ: The initialization of the Ray Space mixing coeffients.
 %
 % Copyright 2020 Mirco Pezzoli
@@ -53,16 +54,16 @@ end
 %% Ray space projection
 fprintf('RaySpace transform...\n');
 % Ray space transformation matrix
-Wb = rayspacetransformmatrix(fAx,c,d,nMic,mbar,Ws,qbar,sigma);
-I = size(Wb, 1);        % Number of Ray space data points
+psi = rayspacetransformmatrix(fAx,c,d,nMic,mbar,Ws,qbar,sigma);
+I = size(psi, 1);        % Number of Ray space data points
 
-invWb = zeros(size(Wb,2),size(Wb,1),fLen);
+invPsi = zeros(size(psi,2),size(psi,1),fLen);
 for ff = 2:fLen
-    invWb(:,:,ff) = svdinversematrix(Wb(:,:,ff), tik);
+    invPsi(:,:,ff) = svdinversematrix(psi(:,:,ff), tik);
 end
 
 % Ray-Space-transformed data
-xRaySpace = spatialfilter(micSTFT, Wb,false);
+xRaySpace = spatialfilter(micSTFT, psi,false);
 
 %% MNMF of rayspace data
 fprintf('MNMF on rayspace...\n');
