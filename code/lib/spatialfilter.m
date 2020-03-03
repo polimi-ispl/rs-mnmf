@@ -1,7 +1,7 @@
 function y = spatialfilter(S, h, inverse)
 %% spatialfilter
 % This function efficiently filter the multichannel STFT using the filter 
-% vector h
+% vector h.
 %
 % Params:
 %   - S: The multichannel input STFT of size freqN x timeN x micN

@@ -1,19 +1,20 @@
 function [PSI] = rayspacetransformmatrix(f,c,d,L,mbar,W,qbar,sigma)
 %%rayspacetransformmatrix
-%   This function computes the ray space transform matrix for multiple
-%   frequencies.
-%   Params:
-%       - f:	frequency axis in Hz
-%       - c:	speed of sound
-%       - d:	distance between adjacent microphones
-%       - L:    Number of microphones
-%       - mbar: m axis sampling interval
-%       - W:    length of m axis
-%       - qbar:	q axis sampling interval
-%       - sigma:gaussian window standard deviation
+% This function computes the ray space transform matrix for multiple
+% frequencies.
 %
-%   Returns:
-%       - PSI: the ray space transform tensor for multiple frequencies
+% Params:
+%   - f: Frequency axis in Hz.
+%   - c: Speed of sound.
+%   - d: Distance between adjacent microphones.
+%   - L: Number of microphones.
+%   - mbar: m axis sampling interval.
+%   - W: Length of m axis.
+%   - qbar:	Q axis sampling interval.
+%   - sigma: Gaussian window standard deviation.
+%
+% Returns:
+%   - PSI: the ray space transform tensor for multiple frequencies.
 %
 % Copyright 2020 Mirco Pezzoli
 % (mirco.pezzoli -at- polimi.it)
@@ -21,7 +22,7 @@ function [PSI] = rayspacetransformmatrix(f,c,d,L,mbar,W,qbar,sigma)
 % This software is distributed under the terms of the GNU Public License
 % version 3 (http://www.gnu.org/licenses/gpl.txt)
 %
-% If you use this code please cite this paper
+% Based on:
 % L. Bianchi, F. Antonacci, A. Sarti and S. Tubaro,
 % "The Ray Space Transform: A New Framework for Wave Field Processing,"
 % in IEEE Transactions on Signal Processing, vol. 64, no. 21,
