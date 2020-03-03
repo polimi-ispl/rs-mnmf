@@ -58,7 +58,7 @@ I = size(Wb, 1);        % Number of Ray space data points
 
 invWb = zeros(size(Wb,2),size(Wb,1),fLen);
 for ff = 2:fLen
-    invWb(:,:,ff) = svd_inverse_matrix(Wb(:,:,ff), tik);
+    invWb(:,:,ff) = svdinversematrix(Wb(:,:,ff), tik);
 end
 
 % Ray-Space-transformed data

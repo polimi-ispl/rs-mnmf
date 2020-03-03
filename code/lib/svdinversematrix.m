@@ -33,7 +33,7 @@ min_sv=sing_values(end);
 if N < M
     G_INV = G'*inv(G*G' + tik*eye(N));
     outParam = tik; % regularization parameter
-elseif max_sv/min_sv<=q
+elseif max_sv/min_sv<=tik
     G_INV  = (G'*G)\G';
     outParam = 0;
 else
