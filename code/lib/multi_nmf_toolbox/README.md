@@ -17,11 +17,10 @@ A. Ozerov and C. Fevotte,
 IEEE Trans. on Audio, Speech and Lang. Proc. special issue on Signal Models and Representations
 of Musical and Environmental Sounds, vol. 18, no. 3, pp. 550-563, March 2010.
 Available: http://www.irisa.fr/metiss/ozerov/Publications/OzerovFevotte_IEEE_TASLP10.pdf
-------------------------------------------------------------------------------------------------------
+
 Some Matlab routines used are from
 Signal Separation Evaluation Campaign (SiSEC 2008) - "Under-determined speech and music mixtures" task:
     http://sisec.wiki.irisa.fr/tiki-index.php?page=Under-determined+speech+and+music+mixtures
-------------------------------------------------------------------------------------------------------
 
 ABOUT
 ------------
