@@ -3,7 +3,7 @@
 % Ray-Space-Based Multichannel Nonnegative Matrix Factorization for Audio
 % Source Separation.
 % This script shows an example of audio source separation using the
-% RS-MCNMF algorithm
+% RS-MCNMF algorithm compared to the BS-MCNMF and the classic MCNMF.
 %
 % Copyright 2020 Mirco Pezzoli
 % (mirco.pezzoli -at- polimi.it)
@@ -47,7 +47,10 @@ tik = 0.5;
 q = (0:qbar:micPos(end,end))';                       % [I,1] q axis
 t = 1:nMic;
 
-% MNMF parameters
+% Beam Space paramteres
+M = nMic;
+
+% MCNMF parameters
 nBasisSource = 12;
 nBasis = nBasisSource * sourceN;
 sourceNMFidx = cell(1,sourceN);
@@ -55,6 +58,7 @@ for iSrc = 1:sourceN
     sourceNMFidx{iSrc} = (1:nBasisSource) + (iSrc-1)*nBasisSource;
 end
 nIter = 20;
+mcnmfConv = true;
 
 % Directory where the impulse resposes are stored
 dataPath = ['..' filesep 'data' filesep 'example'];
@@ -71,6 +75,7 @@ title('Setup'), xlim([-0.1, 3.8]), grid on
 legend('Mics', 'Sources')
 
 %% Microphone array signals
+fprintf('Load the signal...\n');
 sourceSignal = audioread([dataPath filesep 'sourceSignal.wav']);
 % Load the mixtures
 micSignal = audioread([dataPath filesep 'array_mixture.wav']);
@@ -97,7 +102,16 @@ fLen = nfft/2+1;            % Length of frequency axis
 
 %% Source separation through RS-MCNMF
 
-init = [];
+psdMix = 0.5 * (mean(abs(micSTFT(:,:,1)).^2 + abs(micSTFT(:,:,2)).^2, 2));
+% psdMix = mean(mean(abs(xRaySpace).^2, 3) + mean(abs(xRaySpace).^2, 3), 2);
+init.initA = 0.5 * (1.9 * abs(randn(nMic, sourceN)) + ...
+    0.1 * ones(nMic, sourceN));
+% W is intialized so that its enegy follows mixture PSD
+init.initW = 0.5 * (abs(randn(fLen,nBasis)) + ones(fLen,nBasis)) .* ...
+    (psdMix * ones(1,nBasis));
+init.initH = 0.5 * (abs(randn(nBasis,tLen)) + ones(nBasis,tLen));
+% run multichannel NMF MU rules
+init.initQ = abs(init.initA).^2;
 % Source separation using MCNMF in the ray space
 [estimateImage, Q, basisF, activationF, xRaySpace, psi, ...
     invPsi, initQ] = rayspacenmf(micSTFT, mbar, Ws, qbar, sigma, fAx, ...
@@ -123,7 +137,9 @@ for ss = 1:sourceN
     raySpaceEstimateImage{ss} = squeeze(estimateImage(:,:,ss,:));
     raySpaceEstimateImage{ss} = permute(raySpaceEstimateImage{ss}, [3,2,1]);
 end
+
 %% Plot the Ray space data
+fprintf('Show Ray Space separation results...\n');
 fIdx = 35;      % Frequency index to show
 % Ray Space mixture
 mixRay = squeeze(abs(xRaySpace(fIdx ,:,:))).'.^2;
@@ -168,3 +184,265 @@ imagesc(tAx, t, estRay2, [minC, maxC])
 xlabel('Time [s]'), ylabel('Ray space point t');
 colorbar
 title('Estimated Ray Space source 2 image');
+
+%% Estimated source image at the microphone 
+fprintf('RS-MCNMF estimated source image at the microphones...\n');
+istftParams.analysisWin = analysisWin;
+istftParams.synthesisWin = synthesisWin;
+istftParams.hop = hop;
+istftParams.nfft = nfft;
+
+rsmcnmfEstimate = arraysignalreconstruction(estimateImage, ...
+    referenceSignal, invPsi, sourceN, nMic, istftParams, fs);
+
+% Matrix of the reference signals
+ref = cat(3, referenceSignal{:});      
+% Matrix of the estimates given by the RS-MCNMF
+est = cat(3, rsmcnmfEstimate{:});     
+
+for mm = 1:nMic
+    [raySDR(mm,:), raySIR(mm,:), raySAR(mm,:)] = bss_eval_sources( ...
+        squeeze(est(:,mm,:)).', squeeze(ref(:,mm,:)).');
+end
+rsmcnmfSDR = mean(raySDR);
+rsmcnmfSIR = mean(raySIR);
+rsmcnmfSAR = mean(raySAR);
+
+%% Source separation through BS-MCNMF
+[estimateImageBeam, Q, basisF, activationF, xBeamSpace, invWbB] =...
+    beamspacenmf(micSTFT, M, fAx, d, nMic, c, sourceN, nBasisSource,...
+    nIter, init);
+
+% Beam space reference and estimate
+for ss = 1:sourceN
+    beamSpaceRef{ss} = spatialfilter(referenceSTFT{ss},psi,false);
+    beamSpaceRef{ss} = permute(beamSpaceRef{ss}, [3,2,1]);
+    sourceRecSTFTBeam{ss} = sqrt(basisF(:,sourceNMFidx{ss}) * ...
+        activationF(sourceNMFidx{ss} ,:)) .* angle(micSTFT(:,:,1));
+    sourceRecBeam{ss} = istft(sourceRecSTFTBeam{ss}, ...
+        analysisWin, synthesisWin, hop, nfft, fs);
+end
+
+sourceEstimationBeam = cell2mat(sourceRecBeam.');
+% Metrics for the estimation of the sources only
+[sourceBeamSDR, sourceBeamSIR, sourceBeamSAR, perm] = bss_eval_sources(sourceEstimationBeam, sourceSignal.');
+
+estimateImageBeam = estimateImageBeam(:,:,perm,:);
+sourceRecSTFTBeam = sourceRecSTFTBeam(perm);
+sourceRecBeam = sourceRecBeam(perm);
+for ss = 1:sourceN
+    beamSpaceEstimateImage{ss} = squeeze(estimateImageBeam(:,:,ss,:));
+    beamSpaceEstimateImage{ss} = permute(beamSpaceEstimateImage{ss}, [3,2,1]);
+end
+
+%% Plot the Beam Space data
+fprintf('Show Beam Space separation results...\n');
+fIdx = 35;      % Frequency index to show
+% Beam Space mixture
+mixBeam = squeeze(abs(xBeamSpace(fIdx ,:,:))).'.^2;
+% Beam Space reference 1
+refBeam1 = squeeze(abs(beamSpaceRef{1}(:,:,fIdx))).^2;
+% Beam Space reference 2
+refBeam2 = squeeze(abs(beamSpaceRef{2}(:,:,fIdx))).^2;
+% Estimated Beam Space 1
+estBeam1 = squeeze(abs(beamSpaceEstimateImage{1}(:,:,fIdx))).^2;
+% Estimated Beam Space 2
+estBeam2 = squeeze(abs(beamSpaceEstimateImage{2}(:,:,fIdx))).^2;
+
+maxC = max([mixBeam(:); refBeam1(:); refBeam2(:); estBeam1(:); estBeam2(:)]);
+minC = min([mixBeam(:); refBeam1(:); refBeam2(:); estBeam1(:); estBeam2(:)]);
+
+figure(4)
+imagesc(tAx, t, db(mixBeam), db([minC, maxC]))
+xlabel('Time [s]'), ylabel('Beam space point m');
+colorbar
+title(['Beam Space Mixture at ' num2str(fAx(fIdx)), ' [Hz]']);
+
+figure(5)
+subplot(2,2,1)
+imagesc(tAx, t, db(refBeam1), db([minC, maxC]))
+xlabel('Time [s]'), ylabel('Beam space point m');
+colorbar
+title('Beam Space of source 1 image');
+
+subplot(2,2,2)
+imagesc(tAx, t, db(refBeam2), db([minC, maxC]))
+xlabel('Time [s]'), ylabel('Beam space point m');
+colorbar
+title('Beam Space of source 2 image');
+
+subplot(2,2,3)
+imagesc(tAx, t, db(estBeam1), db([minC, maxC]))
+xlabel('Time [s]'), ylabel('Beam space point m');
+colorbar
+title('Estimated Beam Space source 1 image');
+
+subplot(2,2,4)
+imagesc(tAx, t, db(estBeam2), db([minC, maxC]))
+xlabel('Time [s]'), ylabel('Beam space point m');
+colorbar
+title('Estimated Beam Space source 2 image');
+
+%% Estimated source image at the microphone 
+fprintf('BS-MCNMF estimated source image at the microphones...\n');
+istftParams.analysisWin = analysisWin;
+istftParams.synthesisWin = synthesisWin;
+istftParams.hop = hop;
+istftParams.nfft = nfft;
+
+bsmcnmfEstimate = arraysignalreconstruction(estimateImageBeam, ...
+    referenceSignal, invWbB, sourceN, nMic, istftParams, fs);
+
+% Matrix of the reference signals
+ref = cat(3, referenceSignal{:});      
+% Matrix of the estimates given by the RS-MCNMF
+est = cat(3, bsmcnmfEstimate{:});     
+
+for mm = 1:nMic
+    [beamSDR(mm,:), beamSIR(mm,:), beamSAR(mm,:)] = bss_eval_sources( ...
+        squeeze(est(:,mm,:)).', squeeze(ref(:,mm,:)).');
+end
+bsmcnmfSDR = mean(beamSDR);
+bsmcnmfSIR = mean(beamSIR);
+bsmcnmfSAR = mean(beamSAR);
+
+%% Source separation through MCNMF
+initConv = init;
+initConv.initQ = permute(repmat(init.initQ, 1, 1, fLen), [3,1,2]);
+[estimateImageMulti, Q, basisF, activationF] = ...
+    mcnmf(micSTFT, fAx, nMic, sourceN, nBasisSource,...
+    nIter, mcnmfConv, initConv);
+
+% Multichannel Estimate
+for ss = 1:sourceN
+    sourceRecSTFTMulti{ss} = sqrt(basisF(:,sourceNMFidx{ss}) * ...
+        activationF(sourceNMFidx{ss} ,:)) .* angle(micSTFT(:,:,1));
+    sourceRecMulti{ss} = istft(sourceRecSTFTMulti{ss}, ...
+        analysisWin, synthesisWin, hop, nfft, fs);
+end
+
+
+sourceEstimationMulti = cell2mat(sourceRecMulti.');
+% Metrics for the estimation of the sources only
+[sourceMultiSDR, sourceMultiSIR, sourceMultiSAR, perm] = bss_eval_sources(sourceEstimationMulti, sourceSignal.');
+
+estimateImageMulti = estimateImageMulti(:,:,perm,:);
+sourceRecSTFTMulti = sourceRecSTFTMulti(perm);
+sourceRecMulti = sourceRecMulti(perm);
+
+%% Estimated source image at the microphone 
+fprintf('MCNMF estimated source image at the microphones...\n');
+
+signalLenSamp = length(referenceSignal{1}(:,1));
+mcnmfEstimate = cell(sourceN, 1);
+
+% Save estimation on the disk
+for ss = 1:sourceN
+    sTilde = squeeze(estimateImageMulti(:,:,ss,:));
+    for mm = 1:nMic
+        aux = istft(sTilde(:,:,mm), ...
+            analysisWin, synthesisWin, hop, nfft, fs);
+        [auxAligned, referenceAligned] = ...
+            alignsignals(aux, referenceSignal{ss}(:,mm));
+        
+        mcnmfEstimate{ss}(:,mm) = auxAligned(1:signalLenSamp).';
+    end
+end
+
+ref = cat(3, referenceSignal{:});
+est = cat(3, mcnmfEstimate{:});
+for mm = 1:nMic
+    [multiSDR(mm,:), multiSIR(mm,:), multiSAR(mm,:)] = bss_eval_sources( ...
+        squeeze(est(:,mm,:)).', squeeze(ref(:,mm,:)).');
+end
+
+mcnmfSDR = mean(multiSDR);
+mcnmfSIR = mean(multiSIR);
+mcnmfSAR = mean(multiSAR);
+
+%% Show metrics
+
+figure(6)
+categ = categorical({'SAR', 'SIR', 'SDR'});
+plotBar = [bsmcnmfSAR(1), mcnmfSAR(1), rsmcnmfSAR(1);...
+bsmcnmfSIR(1), mcnmfSIR(1), rsmcnmfSIR(1);...
+    bsmcnmfSDR(1), mcnmfSDR(1), rsmcnmfSDR(1)];
+subplot(2,1,1)
+bar(categ, plotBar),% ylim([0, 20])
+plotBar = [bsmcnmfSAR(2), mcnmfSAR(2), rsmcnmfSAR(2); ...
+    bsmcnmfSIR(2), mcnmfSIR(2), rsmcnmfSIR(2);...
+    bsmcnmfSDR(2), mcnmfSDR(2), rsmcnmfSDR(2)];
+title('Source 1 avg metrics')
+legend({'Beam Space', 'Multi channel', 'Ray Space'}, 'Location', 'best');
+subplot(2,1,2)
+bar(categ, plotBar),% ylim([0, 20])
+title('Source 2 avg metrics')
+legend({'Beam Space', 'Multi Channel', 'Ray Space'}, 'Location', 'best');
+
+%% Listening comparison
+fprintf('Listening comparison..\n');
+micIdx = 32;
+
+% First Source
+fprintf('\nSource 1 (female voice)\n')
+fprintf('Press any key to start\n');
+pause();
+fprintf('Reference signal...\n');
+soundsc(referenceSignal{1}(:,micIdx), fs)
+pause(signalLenSamp/fs);
+
+
+fprintf('RS-MCNMF Estimation... Press any key to start\n');
+pause();
+soundsc(rsmcnmfEstimate{1}(:,micIdx), fs)
+pause(signalLenSamp/fs);
+
+
+fprintf('MCNMF Estimation... Press any key to start\n');
+pause();
+soundsc(mcnmfEstimate{1}(:,micIdx), fs)
+pause(signalLenSamp/fs);
+
+fprintf('BS-MCNMF Estimation... Press any key to start\n'); 
+pause();
+soundsc(bsmcnmfEstimate{1}(:,micIdx), fs)
+pause(signalLenSamp/fs);
+
+% Second soure
+fprintf('\nSource 2 (male voice)\n')
+
+fprintf('Press any key to start\n');
+pause();
+fprintf('Reference signal...\n');  
+soundsc(referenceSignal{2}(:,micIdx), fs)
+pause(signalLenSamp/fs);
+
+fprintf('Press any key to start\n');
+fprintf('RS-MCNMF Estimation... Press any key to start\n');
+pause();
+soundsc(rsmcnmfEstimate{2}(:,micIdx), fs)
+pause(signalLenSamp/fs);
+
+fprintf('MCNMF Estimation... Press any key to start\n');
+pause();
+soundsc(mcnmfEstimate{2}(:,micIdx), fs)
+pause(signalLenSamp/fs);
+
+fprintf('BS-MCNMF Estimation... Press any key to start\n');
+pause();
+soundsc(bsmcnmfEstimate{2}(:,micIdx), fs)
+pause(signalLenSamp/fs);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
