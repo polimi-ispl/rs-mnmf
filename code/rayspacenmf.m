@@ -66,7 +66,7 @@ end
 xRaySpace = spatialfilter(micSTFT, psi,false);
 
 %% MNMF of rayspace data
-fprintf('MNMF on rayspace...\n');
+fprintf('RS-MCNMF...\n');
 if isempty(init)
     % Parameters initialization
     psdMix = 0.5 * (mean(abs(xRaySpace(:,:,1)).^2 + abs(xRaySpace(:,:,2)).^2, 2));
