@@ -46,9 +46,9 @@ end
 
 %% Multichannel NMF
 if conv == false
-    fprintf('Multichannel NMF instantaneous mix...\n');
+    fprintf('MCNMF instantaneous mix...\n');
 else
-    fprintf('Multichannel NMF convolutive mix...\n');
+    fprintf('MCNMF convolutive mix...\n');
 end
 if isempty(init)
     psdMix = 0.5 * mean(abs(micSTFT(:,:,1)).^2 + ....

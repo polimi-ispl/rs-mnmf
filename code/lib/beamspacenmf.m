@@ -59,7 +59,7 @@ invWbB = permute(Wb, [2,1,3]);
 xTilde = spatialfilter(micSTFT, Wb,false);
 
 %% MNMF of beamspace data
-fprintf('MNMF on beamspace...\n');
+fprintf('BS-MCNMF...\n');
 % Parameters initialization
 if isempty(init)
     psdMix = (mean(abs(xTilde(:,:,1)).^2 + abs(xTilde(:,:,nMic)).^2, 2));
