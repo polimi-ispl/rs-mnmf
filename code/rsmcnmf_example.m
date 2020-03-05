@@ -39,11 +39,11 @@ micPos = [zeros(nMic,1) y];            % mic position in 2D
 
 % Ray Space Transform parameters
 mubar = 0.06;       % m axis sampling interval
-Ws = 4;             % length of m axis
+D = 4;             % length of m axis
 nubar = 4*d;        % nu axis sampling interval
 sigma = 8*d;        % gaussian window standard deviation
-mu = ((0:mubar:(Ws-1)*mubar)-((Ws-1)/2*mubar))';       % [W,1] mu axis
-nu = (0:nubar:micPos(end,end))';                       % [L,1] nu axis
+mu = ((0:mubar:(D-1)*mubar)-((D-1)/2*mubar))';          % [D,1] mu axis
+nu = (0:nubar:micPos(end,end))';                        % [L,1] nu axis
 t = 1:nMic;
 tik = 0.5;          % Regularization parameter for the psiTilde
 
@@ -122,7 +122,7 @@ init.initQ = abs(init.initA).^2;
 
 % Source separation using MCNMF in the ray space
 [estimateImage, Q, basisF, activationF, xRaySpace, psi, ...
-    invPsi, initQ] = rayspacenmf(micSTFT, mubar, Ws, nubar, sigma, fAx, ...
+    invPsi, initQ] = rayspacenmf(micSTFT, mubar, D, nubar, sigma, fAx, ...
     d, nMic, c, sourceN, nBasisSource,...
     nIter, tik, init);
 

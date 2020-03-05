@@ -1,4 +1,4 @@
-function [estimateImage, Q, basisF, activationF, xRaySpace, psi, invPsi, initQ] = rayspacenmf(micSTFT, mbar, Ws, qbar, sigma, fAx, d, nMic, c, sourceN, nBasisSource,...
+function [estimateImage, Q, basisF, activationF, xRaySpace, psi, invPsi, initQ] = rayspacenmf(micSTFT, muBar, D, nuBar, sigma, fAx, d, nMic, c, sourceN, nBasisSource,...
     nIter, tik, init)
 % rayspacenmf
 % This function performs the source separation using the Ray-Space-Based
@@ -8,9 +8,9 @@ function [estimateImage, Q, basisF, activationF, xRaySpace, psi, invPsi, initQ] 
 %
 % Params:
 %   - micSTFT: The multichannel STFTs of size freqN x timeN x micN.
-%   - mbar: The sampling of the m-axis (plane wave directions).
-%   - Ws: Length of m axis.
-%   - qbar: The sampling of the q-axis (subarray position).
+%   - muBar: The sampling of the mu-axis (plane wave directions).
+%   - D: Length of mu axis.
+%   - nuBar: The sampling of the nu-axis (subarray position).
 %   - sigma: Gaussian window standard deviation.
 %   - fAx: Frequency axis.
 %   - d: Distance between two consecutive microphones.
@@ -54,7 +54,7 @@ end
 %% Ray space projection
 fprintf('RaySpace transform...\n');
 % Ray space transformation matrix
-psi = rayspacetransformmatrix(fAx,c,d,nMic,mbar,Ws,qbar,sigma);
+psi = rayspacetransformmatrix(fAx,c,d,nMic,muBar,D,nuBar,sigma);
 I = size(psi, 1);        % Number of Ray space data points
 
 invPsi = zeros(size(psi,2),size(psi,1),fLen);
