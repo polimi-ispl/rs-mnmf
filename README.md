@@ -1,8 +1,8 @@
 # Ray-Space-Based Multichannel Nonnegative Matrix Factorization 
 
 ## About
-Matlab implementation of the Ray-Space-Based Multichannel Nonegative Matrix Factorization (RS-MCNMF) for audio source separation.
-A blind source separation is performed adopting the MCNMF algorithm to the Ray Space data. 
+Matlab implementation of the Ray-Space-Based Multichannel Nonegative Matrix Factorization (RS-MNMF) for audio source separation.
+A blind source separation is performed adopting the MNMF algorithm to the Ray Space data. 
 
 ## Contents
 
@@ -18,10 +18,10 @@ A blind source separation is performed adopting the MCNMF algorithm to the Ray S
 ```
 
 - `code`: folder with the source code.
-    - `lib`: folder with utilities for the BS-MCNMF, MCNMF, BSS evaluation and more.
-    - `rayspacenmf.m`: MATLAB function for the RS-MCNMF.
-    - `rsmcnmf_example.m`: example script for RS-MCNMF source separation and comparison among the techniques
-- `data`: folder with sample data for `rsmcnmf_example.m`
+    - `lib`: folder with utilities for BSS evaluation and more.
+    - `rayspacenmf.m`: MATLAB function for the RS-MNMF.
+    - `rsmcnmf_example.m`: example script for RS-MNMF source separation and comparison among the techniques
+- `data`: folder with sample data for `rsmnmf_example.m`
 
 ## Usage
 
@@ -29,8 +29,8 @@ Clone or download the repository and run `rsmcnmf_example.m` to see how to use t
 
 ## References
 
-The RS-MCNMF for audio source separation was originally proposed in:
-* M. Pezzoli, M. Cobos, F. Antonacci, A. Sarti, "Ray-Space-Based Multichannel Nonnegative Matrix Factorization for Audio Source Separation" 
+The RS-MNMF for audio source separation was originally proposed in:
+* M. Pezzoli, J. J. Carabias-Orti, M. Cobos, F. Antonacci, A. Sarti, "Ray-Space-Based Multichannel Nonnegative Matrix Factorization for Audio Source Separation" 
 
 However the following articles are also important for understanding the technique:
 
