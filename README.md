@@ -13,24 +13,24 @@ A blind source separation is performed adopting the MNMF algorithm to the Ray Sp
 ├── code
 │   ├── lib
 │   ├── rayspacenmf.m
-│   ├── rsmcnmf_example.m
+│   ├── rsmnmf_example.m
 ├── data
 ```
 
 - `code`: folder with the source code.
     - `lib`: folder with utilities for BSS evaluation and more.
     - `rayspacenmf.m`: MATLAB function for the RS-MNMF.
-    - `rsmcnmf_example.m`: example script for RS-MNMF source separation and comparison among the techniques
+    - `rsmnmf_example.m`: example script for RS-MNMF source separation and comparison among the techniques
 - `data`: folder with sample data for `rsmnmf_example.m`
 
 ## Usage
 
-Clone or download the repository and run `rsmcnmf_example.m` to see how to use the function `rayspacenmf.m`.
+Clone or download the repository and run `rscnmf_example.m` to see how to use the function `rayspacenmf.m`.
 
 ## References
 
 The RS-MNMF for audio source separation was originally proposed in:
-* M. Pezzoli, J. J. Carabias-Orti, M. Cobos, F. Antonacci, A. Sarti, "Ray-Space-Based Multichannel Nonnegative Matrix Factorization for Audio Source Separation" 
+* M. Pezzoli, J. J. Carabias-Orti, M. Cobos, F. Antonacci, A. Sarti, "Ray-Space-Based Multichannel Nonnegative Matrix Factorization for Audio Source Separation",  IEEE Signal Processing Letters (2021), doi: 10.1109/LSP.2021.3055463 
 
 However the following articles are also important for understanding the technique:
 
