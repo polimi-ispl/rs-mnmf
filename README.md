@@ -4,6 +4,13 @@
 Matlab implementation of the Ray-Space-Based Multichannel Nonegative Matrix Factorization (RS-MNMF) for audio source separation.
 A blind source separation is performed adopting the MNMF algorithm to the Ray Space data. 
 
+## Abstract
+Nonnegative matrix factorization (NMF) has been traditionally considered a promising approach for audio source separation. 
+While standard NMF is only suited for single-channel mixtures, extensions to consider multi-channel data have been also proposed.
+Among the most popular alternatives, multichannel NMF (MNMF) and further derivations based on constrained spatial covariance models have been successfully employed to separate multi-microphone convolutive mixtures. 
+This letter proposes a MNMF extension by considering a mixture model with Ray-Space-transformed signals, where magnitude data successfully encodes source locations as frequency-independent linear patterns. 
+We show that the MNMF algorithm can be seamlessly adapted to consider Ray-Space-transformed data, providing competitive results with recent state-of-the-art MNMF algorithms in a number of configurations using real recordings.
+
 ## Contents
 
 ```
@@ -21,11 +28,11 @@ A blind source separation is performed adopting the MNMF algorithm to the Ray Sp
     - `lib`: folder with utilities for BSS evaluation and more.
     - `rayspacenmf.m`: MATLAB function for the RS-MNMF.
     - `rsmnmf_example.m`: example script for RS-MNMF source separation and comparison among the techniques
-- `data`: folder with sample data for `rsmnmf_example.m`
+- `data`: folder with the RIR dataset and source signals adopted in the SPL publication
 
 ## Usage
 
-Clone or download the repository and run `rscnmf_example.m` to see how to use the function `rayspacenmf.m`.
+Clone or download the repository and run `rsmnmf_example.m` to see how to use the function `rayspacenmf.m`.
 
 ## References
 
