@@ -31,6 +31,9 @@ function [Q, W, H, cost] = multinmf_inst_mu_beta(V, beta, n_iter, Q, W, H, part,
 % of Musical and Environmental Sounds, vol. 18, no. 3, pp. 550-563, March 2010.
 % Available: http://www.irisa.fr/metiss/ozerov/Publications/OzerovFevotte_IEEE_TASLP10.pdf
 %
+% The code has been adapted to the beta-divergence cost function by
+% J. J. Carabias-Orti 
+%
 % If you use this code please cite this paper
 % M. Pezzoli, J. J. Carabias-Orti, M. Cobos, F. Antonacci,and A. Sarti. 
 % "Ray-space-based multichannel nonnegative matrix factorization for audio 
