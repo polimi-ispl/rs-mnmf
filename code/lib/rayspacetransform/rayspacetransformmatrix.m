@@ -34,7 +34,6 @@ function [PSI] = rayspacetransformmatrix(f,c,d,L,mbar,W,qbar,sigma)
 z = (0:d:d*(L-1))';                         % [L,1] microphone positions
 m = ((0:mbar:(W-1)*mbar)-((W-1)/2*mbar))';  % [W,1] m axis
 q = (0:qbar:z(end))';                       % [I,1] q axis
-I = length(q);                              % number of frames
 fLen = length(f);
 
 [M, Q] = meshgrid(m,q);
@@ -44,7 +43,8 @@ fLen = length(f);
 PSI = zeros(L, size(MM,2), fLen);
 % RST transformation matrix
 for ff = 1:fLen
-    PSI(:,:,ff) = d*exp(1i*(2*pi*f(ff)/c)*MZ.*MM./sqrt(1+MM.^2)) .* exp(-pi*(QZ-QQ).^2/sigma^2);
+    PSI(:,:,ff) = d*exp(1i*(2*pi*f(ff)/c)*MZ.*MM./sqrt(1+MM.^2)) ...
+        .* exp(-pi*(QZ-QQ).^2/sigma^2);
 end
 
 end
