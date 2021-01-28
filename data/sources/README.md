@@ -7,7 +7,7 @@ A sketch of the setup and further details are available in the SPL paper.
 The RIRs corresponding to the sources are stored in the 32-channels ``.wav`` files named accordingly to the source label. 
 The signals are recorded at 48kHz.
 
-![A test image](../images/office_setup.pdf)
+![A test image](../images/office_setup.png)
 
 The mesurements were performed by Mirco Pezzoli (mirco.pezzoli -at- polimi.it) at the Image and Sound Processing Lab of Politecnico di Milano. 
 
