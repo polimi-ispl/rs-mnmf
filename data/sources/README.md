@@ -27,7 +27,8 @@ doi: 10.1109/LSP.2021.3055463
 M.Pezzoli, L.Comanducci, J.Waltz,A.Agnello, L.Bondi, A.Canclini, and A. Sarti.
 “A dante powered modular microphone array system”, 
 in Audio Engineering Society Convention 145. Audio Engineering Society, 2018.
-`
+`` 
+
 
 
 [_eSticks_]: https://github.com/polimi-ispl/ebeamer
