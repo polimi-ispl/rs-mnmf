@@ -10,7 +10,7 @@ The RIRs corresponding to the sources are stored in the 32-channels ``.wav`` fil
 The signals are recorded at 48kHz.
 The estimated locations of the sources are stored as a 9x2 matrix in ``source_location.mat`` file.
 
-![A test image](../images/office_setup.png)
+![Office setup (top view)](../images/office_setup.png)
 
 The mesurements were performed by Mirco Pezzoli (mirco.pezzoli -at- polimi.it) at the Image and Sound Processing Lab of Politecnico di Milano. 
 
