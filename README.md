@@ -27,8 +27,8 @@ We show that the MNMF algorithm can be seamlessly adapted to consider Ray-Space-
 - `code`: folder with the source code.
     - `lib`: folder with utilities for BSS evaluation and more.
     - `rayspacenmf.m`: MATLAB function for the RS-MNMF.
-    - `rsmnmf_example.m`: example script for RS-MNMF source separation and comparison among the techniques
-- `data`: folder with the RIR dataset and source signals adopted in the SPL publication
+    - `rsmnmf_example.m`: example script for RS-MNMF source separation.
+- `data`: folder with the RIR dataset and source signals adopted in the SPL publication.
 
 ## Usage
 
